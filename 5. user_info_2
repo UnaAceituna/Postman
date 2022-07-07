@@ -1,0 +1,99 @@
+//4. Отправить запрос.
+//5. Статус код 200
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+//6. Спарсить response body в json.
+const resp2data = pm.response.json()
+//console.log(resp2data)
+
+//7. Спарсить request.
+var req2data = request.data
+
+//8. Проверить, что json response имеет параметр start_qa_salary
+pm.test("Start", function () {
+    pm.expect(resp2data).to.have.property("start_qa_salary");
+});
+
+//9. Проверить, что json response имеет параметр qa_salary_after_6_months
+pm.test("Start6", function () {
+    pm.expect(resp2data).to.have.property("qa_salary_after_6_months");
+});
+
+//10. Проверить, что json response имеет параметр qa_salary_after_12_months
+pm.test("Start12", function () {
+    pm.expect(resp2data).to.have.property("qa_salary_after_12_months");
+});
+
+//11. Проверить, что json response имеет параметр qa_salary_after_1.5_year
+pm.test("Start 1.5 year", function () {
+    pm.expect(resp2data).to.have.property("qa_salary_after_1.5_year");
+});
+
+//12. Проверить, что json response имеет параметр qa_salary_after_3.5_years
+pm.test("Start 3.5_years", function () {
+    pm.expect(resp2data).to.have.property("qa_salary_after_3.5_years");
+});
+
+//13. Проверить, что json response имеет параметр person
+pm.test("Person", function () {
+    pm.expect(resp2data).to.have.property("person");
+});
+
+//14. Проверить, что параметр start_qa_salary равен salary из request (salary забрать из request.)
+const salaryQA = req2data.salary;
+pm.test("Salary = start_salary", function () {
+    pm.expect(JSON.stringify(resp2data.start_qa_salary)).to.eql(salaryQA);
+});
+
+//15. Проверить, что параметр qa_salary_after_6_months равен salary*2 из request (salary забрать из request.)
+pm.test("Salary_6 = salary*2", function () {
+    let qa_6_months = resp2data.qa_salary_after_6_months
+    let salary_QA = salaryQA*2
+    pm.expect(qa_6_months).to.eql(salary_QA);
+});
+
+//16. Проверить, что параметр qa_salary_after_12_months равен salary*2.7 из request (salary забрать из request.)
+pm.test("Salary_12 = salary*2.7", function () {
+    let qa_12_months = resp2data.qa_salary_after_12_months
+    let salary_QA = salaryQA*2.7
+    pm.expect(qa_12_months).to.eql(salary_QA);
+});
+
+//17. Проверить, что параметр qa_salary_after_1.5_year равен salary*3.3 из request (salary забрать из request.)
+pm.test("Salary 1.5 = salary*3.3", function () {
+    let salary_QA = salaryQA*3.3
+    pm.expect(resp2data['qa_salary_after_1.5_year']).to.eql(salary_QA);
+});
+
+//18. Проверить, что параметр qa_salary_after_3.5_years равен salary*3.8 из request (salary забрать из request.)
+pm.test("Salary 3.5 years = salary*3.8", function () {
+    let salary_QA = salaryQA*3.8
+    pm.expect(resp2data['qa_salary_after_3.5_years']).to.eql(salary_QA);
+});
+
+//19. Проверить, что в параметре person, 1-й элемент из u_name равен salary из request (salary забрать из request.)
+pm.test("Salary is the first element", function () {
+    pm.expect(JSON.stringify(resp2data.person.u_name[1])).to.eql(salaryQA);
+});
+
+//20. Проверить, что что параметр u_age равен age из request (age забрать из request.)
+pm.test("Age is equal to age", function () {
+    let age2 = req2data.age
+    pm.expect(JSON.stringify(resp2data.person.u_age)).to.eql(age2);
+});
+
+//21. Проверить, что параметр u_salary_5_years равен salary*4.2 из request (salary забрать из request.)
+pm.test("Salary 5 years = salary*4.2", function () {
+    let salary5 = resp2data.person.u_salary_5_years
+    let salary_QA = salaryQA*4.2
+    pm.expect(salary5).to.eql(salary_QA);
+});
+
+//22. ***Написать цикл который выведет в консоль по порядку элементы списка из параметра person.
+Object.keys(resp2data.person).forEach(key => {
+   let value = resp2data.person[key]
+    console.log(key, value)
+})
+
